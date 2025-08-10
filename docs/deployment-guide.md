@@ -198,7 +198,7 @@
    - Apply for WhatsApp Business API access
 
 2. **Configure Production Webhook**
-   ```python
+   \`\`\`python
    # Update webhook endpoint for production
    @app.post("/webhook/whatsapp-business")
    async def whatsapp_business_webhook(request: Request):
@@ -215,7 +215,7 @@
    - Set up alerts for downtime
 
 2. **Add Custom Metrics**
-   ```python
+   \`\`\`python
    # In main.py, add metrics endpoint
    @app.get("/metrics")
    async def get_metrics():
@@ -229,7 +229,7 @@
 ### Step 2: Error Tracking
 
 1. **Add Sentry (Optional)**
-   ```python
+   \`\`\`python
    # pip install sentry-sdk
    import sentry_sdk
    
@@ -302,7 +302,7 @@
    \`\`\`
 
 2. **Database Connection Issues**
-   ```python
+   \`\`\`python
    # Test database connection
    async def test_db():
        try:
@@ -314,7 +314,7 @@
    \`\`\`
 
 3. **High Response Times**
-   ```python
+   \`\`\`python
    # Add request timing middleware
    @app.middleware("http")
    async def add_process_time_header(request: Request, call_next):
@@ -336,7 +336,7 @@
 **Next Steps**: After deployment, proceed with pilot school setup and teacher training materials.
 \`\`\`
 
-```python file="services/monitoring_service.py"
+\`\`\`python file="services/monitoring_service.py"
 import logging
 import time
 import asyncio
