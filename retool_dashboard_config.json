@@ -1,0 +1,64 @@
+{
+  "dashboard_name": "SolveWithMe Analytics Dashboard",
+  "description": "Comprehensive analytics dashboard for the SolveWithMe platform",
+  "widgets": [
+    {
+      "type": "metric_card",
+      "title": "Total Students",
+      "query": "SELECT COUNT(*) as total_users FROM users WHERE is_active = true",
+      "visualization": "number"
+    },
+    {
+      "type": "metric_card",
+      "title": "Questions Today",
+      "query": "SELECT COUNT(*) as questions_today FROM questions WHERE DATE(created_at) = CURRENT_DATE",
+      "visualization": "number"
+    },
+    {
+      "type": "chart",
+      "title": "Daily Question Volume",
+      "query": "SELECT DATE(created_at) as date, COUNT(*) as questions FROM questions WHERE created_at >= CURRENT_DATE - INTERVAL '30 days' GROUP BY DATE(created_at) ORDER BY date",
+      "visualization": "line_chart"
+    },
+    {
+      "type": "chart",
+      "title": "Popular Topics",
+      "query": "SELECT topic, COUNT(*) as count FROM questions WHERE created_at >= CURRENT_DATE - INTERVAL '7 days' AND topic IS NOT NULL GROUP BY topic ORDER BY count DESC LIMIT 10",
+      "visualization": "bar_chart"
+    },
+    {
+      "type": "chart",
+      "title": "Language Distribution",
+      "query": "SELECT language, COUNT(*) as count FROM questions WHERE created_at >= CURRENT_DATE - INTERVAL '7 days' GROUP BY language",
+      "visualization": "pie_chart"
+    },
+    {
+      "type": "table",
+      "title": "Top Performing Schools",
+      "query": "SELECT s.name as school, COUNT(DISTINCT u.id) as students, COUNT(q.id) as questions, AVG(r.confidence_score) as avg_success FROM schools s JOIN users u ON u.school = s.name JOIN questions q ON q.user_id = u.id JOIN responses r ON r.question_id = q.id WHERE q.created_at >= CURRENT_DATE - INTERVAL '7 days' GROUP BY s.name ORDER BY avg_success DESC LIMIT 10"
+    },
+    {
+      "type": "table",
+      "title": "Students Needing Support",
+      "query": "SELECT u.name, u.school, u.grade_level, COUNT(q.id) as questions, AVG(r.confidence_score) as success_rate FROM users u JOIN questions q ON u.id = q.user_id JOIN responses r ON q.id = r.question_id WHERE q.created_at >= CURRENT_DATE - INTERVAL '7 days' GROUP BY u.id, u.name, u.school, u.grade_level HAVING COUNT(q.id) >= 3 AND AVG(r.confidence_score) < 0.5 ORDER BY success_rate ASC"
+    }
+  ],
+  "refresh_interval": 300,
+  "filters": [
+    {
+      "name": "date_range",
+      "type": "date_range",
+      "default": "last_7_days"
+    },
+    {
+      "name": "school",
+      "type": "select",
+      "query": "SELECT DISTINCT name FROM schools ORDER BY name"
+    },
+    {
+      "name": "grade_level",
+      "type": "select",
+      "options": ["SS1", "SS2", "SS3"]
+    }
+  ]
+}
